@@ -38,6 +38,21 @@ public class AutentificacionController {
 
 
     }
+    @PostMapping("/logout")
+    public LogoutResponseDTO cerrarSesion(@RequestBody LogoutRequestDTO logoutRequestDTO) {
+        try {
+            String[] datosUsuario = autenticacionService.logout(logoutRequestDTO);
+            System.out.println("Resultado2: " + Arrays.toString(datosUsuario));
+            if (datosUsuario == null) {
+                return new LogoutResponseDTO("01", "Error: Usuario no encontrado");
+            }
+            return new LogoutResponseDTO("00", "Cierre de sesión exitoso");
+        } catch (IOException e) {
+            return new LogoutResponseDTO("99", "Error al registrar cierre de sesión");
+        }
+    }
+
+
 
 
 
