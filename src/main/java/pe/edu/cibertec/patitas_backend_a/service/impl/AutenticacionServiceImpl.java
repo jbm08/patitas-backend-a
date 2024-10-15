@@ -58,5 +58,29 @@ public class AutenticacionServiceImpl implements AutenticacionService {
         return datosUsuario;
     }
 
+    @Override
+    public String[] logout(LogoutRequestDTO logoutRequestDTO) throws IOException {
 
+        String[] datosUsuario = new String[3];
+        datosUsuario[0] = logoutRequestDTO.tipoDocumento();
+        datosUsuario[1] = logoutRequestDTO.numeroDocumento();
+        datosUsuario[2] = LocalDateTime.now().toString();
+        File archivo = new File("src/main/resources/logoutlog.txt");
+        if (!archivo.exists()) {
+            archivo.createNewFile();
+        }
+        try (BufferedWriter bf = new BufferedWriter(new FileWriter(archivo, true))) {
+            String linea = logoutRequestDTO.tipoDocumento() + ";" +
+                    logoutRequestDTO.numeroDocumento() + ";" +
+                    LocalDateTime.now().toString() + "\n";
+
+            bf.write(linea);
+
+        } catch (IOException e) {
+            datosUsuario = null;
+            throw new IOException("Error al escribir en logoutlog.txt", e);
+        }
+
+        return datosUsuario;
+    }
 }
