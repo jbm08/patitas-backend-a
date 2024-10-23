@@ -2,10 +2,7 @@ package pe.edu.cibertec.patitas_backend_a.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.cibertec.patitas_backend_a.dto.LoginRequestDTO;
-import pe.edu.cibertec.patitas_backend_a.dto.LoginResponseDTO;
-import pe.edu.cibertec.patitas_backend_a.dto.LogoutRequestDTO;
-import pe.edu.cibertec.patitas_backend_a.dto.LogoutResponseDTO;
+import pe.edu.cibertec.patitas_backend_a.dto.*;
 import pe.edu.cibertec.patitas_backend_a.service.AutenticacionService;
 
 import java.io.IOException;
@@ -49,6 +46,24 @@ public class AutentificacionController {
             return new LogoutResponseDTO("00", "Cierre de sesión exitoso");
         } catch (IOException e) {
             return new LogoutResponseDTO("99", "Error al registrar cierre de sesión");
+        }
+    }
+
+    @PostMapping("/logout_ef")
+    public LogoutResponseEFDTO closeEf(@RequestBody LogoutRequestEFDTO request){
+        //bloque if
+        if(request.numeroDocumento() == null || request.numeroDocumento().equals("")
+                || request.tipoDocumento() == null || request.tipoDocumento().equals("")){
+            return new LogoutResponseEFDTO("01","Falta información para el cerrar la sesion");
+        }
+        // bloque try catch
+        try{
+            Thread.sleep(Duration.ofSeconds(10));
+            autenticacionService.logoutEF(request);
+            return new LogoutResponseEFDTO("00","");
+        } catch (IOException | InterruptedException e) {
+            System.out.println(e.getMessage());
+            return new LogoutResponseEFDTO("99","Ocurrió un problema en el servidor");
         }
     }
 
